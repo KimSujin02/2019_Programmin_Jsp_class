@@ -80,9 +80,8 @@ public class MemberDbBean {
 			pstmt.setString(3, member.getZipcode()); //쿼리 실행 form 생성 완료
 			pstmt.setString(4, member.getAddress());
 			pstmt.setString(5, member.getJobs());
-			pstmt.executeUpdate(); //쿼리문을 실행시키는 부분
+			pstmt.executeUpdate();
 		}catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
