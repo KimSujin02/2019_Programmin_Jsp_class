@@ -1,38 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <jsp:useBean id="regBean" class="jdbcbean.MemberBean"/>
-    <jsp:setProperty name = "regBean" property="*"/>
     
-    <!-- 
-    	=> MemberBean의 있는 변수 모든값을 "*"(아스타)기호로 가져온다.
-		=> id 값만 가져오고 싶으면 "id"로 하면 됨
-     -->
-     
-     <jsp:useBean id="regDbBean" class="jdbcbean.MemberDbBean"/>
-     <%
-     	regDbBean.insert(regBean);
-     %>
-     
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원가입 확인</title>
+
+<%
+	request.setCharacterEncoding("UTF-8");
+%>
+    <jsp:useBean id="regBean" class="jdbcbean.MemberBean"/>
+    <jsp:setProperty name = "regBean" property="*"/>
+    
 </head>
-<body bgcolor="#FFFFCC">
+<body bgcolor="#996600">
 <table width="80%" align="center" cellspacing="0" cellpadding="5">
 	<tr>
 		<td align="center" valign="middle" bgcolor="#FFFFCC">
 		<table width="90%" border=1 cellspacing="0" cellspacing="2" align="center">
-		<form name=regForm method=post action="memberProInsert.jsp">
-			<tr align=center bgcolor="#996600">
+		<form name="regForm" method="post" action="update.jsp">
+			<tr align="center" bgcolor="#996600">
 				<td colspan="3"><font color="#FFFFFF"><b>
 					<jsp:getProperty name="regBean" property="name"/> 
 				회원님이 작성하신 내용입니다. 확인해주세요</b></font></td>
 			</tr>
 			<tr>
-				<td width=20%>아이디</td>
-				<td><jsp:getProperty name="regBean" property="id"/></td>
+				<td width="24%">아이디</td>
+				<td width="41%"><jsp:getProperty name="regBean" property="id"/></td>
 			</tr>
 			<tr>
 				<td>패스워드</td>
@@ -43,8 +37,12 @@
 				<td><jsp:getProperty name="regBean" property="name"/></td>
 			</tr>
 			<tr>
-				<td>주민등록번호</td>
-				<td><jsp:getProperty name="regBean" property="num1"/>-<jsp:getProperty name="redDbBean" property="num2"/></td>
+				<td>주민등록번호1</td>
+				<td><jsp:getProperty name="regBean" property="num1"/></td>
+			</tr>
+			<tr>
+				<td>주민등록번호2</td>
+				<td><jsp:getProperty name="regBean" property="num2"/></td>
 			</tr>
 			<tr>
 				<td>이메일</td>
@@ -67,12 +65,15 @@
 				<td><jsp:getProperty name="regBean" property="jobs"/></td>
 			</tr>
 			<tr>
-				<td colspan=2><input type=submit value="회원정보수정" action="update.jsp"> </td>
+				<td colspan="2" align="center">
+					<input type="submit" value="확인완료">&nbsp;
+					<input type="button" value="다시쓰기" onClick="history.back()">
+				 </td>
 			</tr>
-		</table>
-		<input type="hidden" name="id" value="<jsp:getParameter>" name="regBean" property="id"/>
-	</form>
+		</form>
+	</table>
+	</td>
+</tr>
 </table>
-
 </body>
 </html>
