@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <jsp:useBean id="redDbBean" class="jdbcbean.MemberBean"/>
+    <jsp:useBean id="redDbBean" class="b23.jdbcbean2306.MemberBean"/>
     <jsp:setProperty name = "redDbBean" property="*"/>
     
     <!-- 

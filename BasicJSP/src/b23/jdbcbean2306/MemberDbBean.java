@@ -1,12 +1,12 @@
-package jdbcbean;
+package b23.jdbcbean2306;
 import java.sql.*;
 
 public class MemberDbBean {
 	
 		final String JDBC_DRIVER = "org.gjt.mm.mysql.Driver";
-		final String JDBC_URL = "jdbc:mysql://localhost:3306/mydb";
+		final String JDBC_URL = "jdbc:mysql://localhost:3307/mydb";
 		final String USER = "root";
-		final String PASS = "mirim2";
+		final String PASS = "1234";
 		Connection conn;
 		PreparedStatement pstmt;
 		String sql;
@@ -14,8 +14,8 @@ public class MemberDbBean {
 	
 	public MemberDbBean() {	
 		try {
-		Class.forName("org.gjt.mm.mysql.Driver"); //try문 안에, 밖에 넣어도 됨. //DB접속
-		conn = DriverManager.getConnection(JDBC_URL, USER, PASS); //db 접속
+			Class.forName("org.gjt.mm.mysql.Driver"); //try문 안에, 밖에 넣어도 됨. //DB접속
+			conn = DriverManager.getConnection(JDBC_URL, USER, PASS); //db 접속
 		} catch(Exception e){
 			e.printStackTrace();
 			System.out.println("드라이버 로딩 및 connection 오류");
@@ -23,35 +23,37 @@ public class MemberDbBean {
 	} //드라이버 연결
 	
 	public void insertMember(MemberBean member) { 
-		sql = "insert into tblRegister(id, pwd, name, num1, num2, email, phone, zipcode, address, jobs) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"; //SQL문
+		sql = "insert into tblRegister(id, pwd, name, num1, num2, email, phone, zipcode, address, jobs) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getId()); 
 			pstmt.setString(2, member.getPwd());
-			pstmt.setString(3, member.getName()); //쿼리 실행 form 생성 완료
+			pstmt.setString(3, member.getName());
 			pstmt.setString(4, member.getNum1());
 			pstmt.setString(5, member.getNum2());
 			pstmt.setString(6, member.getEmail()); 
 			pstmt.setString(7, member.getPhone());
-			pstmt.setString(8, member.getZipcode()); //쿼리 실행 form 생성 완료
+			pstmt.setString(8, member.getZipcode());
 			pstmt.setString(9, member.getAddress());
 			pstmt.setString(10, member.getJobs());
-			pstmt.executeUpdate(); //쿼리문을 실행시키는 부분
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("데이터베이스 입력 오류");
-		} //쿼리문 실행 준비 (insert문 실행), executeQuery문은 select문 실행
+		}
 		
-	} //tbl레지스터에 insert
-	public MemberBean selectMember(String id) {	//select문 테이블에서 데이터를 가져오는데,
+	} 
+	
+	public MemberBean selectMember(String id) {
 		System.out.println(id);
 		MemberBean member = new MemberBean();
-		sql = "select * from tblregister where id=?"; //SQL문
+		
 		try {
+			sql = "select * from tblregister where id=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
-			rs = pstmt.executeQuery(); //쿼리문을 실행시키는 부분
-			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
 			member.setId(rs.getString("id"));
 			member.setPwd(rs.getString("pwd"));
 			member.setName(rs.getString("name"));
@@ -62,26 +64,27 @@ public class MemberDbBean {
 			member.setZipcode(rs.getString("zipcode"));
 			member.setAddress(rs.getString("address"));
 			member.setJobs(rs.getString("jobs"));
+		}
 	
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("데이터 불러오기 오류");
-		} //쿼리문 실행 준비 (insert문 실행), executeQuery문은 select문 실행
+		}
 		return member;
 	}
+	
 	public void updateMember(MemberBean member) {
 		try {
 			sql="update tblregister set email = ?, phone = ?, zipcode = ?, address = ?, jobs = ?"
 				+ "where id = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, member.getEmail()); 
+			pstmt.setString(1, member.getEmail());
 			pstmt.setString(2, member.getPhone());
-			pstmt.setString(3, member.getZipcode()); //쿼리 실행 form 생성 완료
+			pstmt.setString(3, member.getZipcode());
 			pstmt.setString(4, member.getAddress());
 			pstmt.setString(5, member.getJobs());
 			pstmt.executeUpdate();
-		}catch (SQLException e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

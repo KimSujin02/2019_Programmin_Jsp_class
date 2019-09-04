@@ -12,7 +12,7 @@
 <script type="text/javascript">
 	function check(){
 		
-		var id = document.member.id.value;  
+		var id = document.member.id.value; 
 		var pwd = document.member.pwd.value;
 		if(id=="") { 
 			alert("아이디를 입력해주세요")
@@ -26,7 +26,7 @@
 </script>
 </head>
 <body bgcolor="#FFFFCC">
-    <jsp:useBean id="regBean" class="jdbcbean.MemberBean"/>
+    <jsp:useBean id="regBean" class="b23.jdbcbean2306.MemberBean"/>
     <jsp:setProperty name = "regBean" property="*"/>
     
         <!-- 
@@ -34,7 +34,7 @@
 		=> id 값만 가져오고 싶으면 "id"로 하면 됨
      -->
 <center>
-<form name="member" method="post" onsubmit="return member_check();" action="memberPro.jsp">	
+<form name="member" method="post" onsubmit="return check();" action="memberPro.jsp">	
 	<table width="600" border="1">
 		<tr>
 			<td colspan=2>회원가입</td>

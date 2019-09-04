@@ -9,8 +9,11 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 %>
-    <jsp:useBean id="regBean" class="jdbcbean.MemberBean"/>
+    <jsp:useBean id="regBean" class="b23.jdbcbean2306.MemberBean"/>
     <jsp:setProperty name = "regBean" property="*"/>
+    	
+	<jsp:useBean id="regDbBean" class="b23.jdbcbean2306.MemberDbBean"/>
+	<% regDbBean.insertMember(regBean); %>
     
 </head>
 <body bgcolor="#996600">
@@ -68,6 +71,7 @@
 				<td colspan="2" align="center">
 					<input type="submit" value="확인완료">&nbsp;
 					<input type="button" value="다시쓰기" onClick="history.back()">
+					<input type="button" value="로그인" onClick="javascript:location.href='login.jsp'">
 				 </td>
 			</tr>
 		</form>

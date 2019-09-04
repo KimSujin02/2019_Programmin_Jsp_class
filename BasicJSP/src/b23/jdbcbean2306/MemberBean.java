@@ -1,17 +1,17 @@
- package jdbcbean;
+ package b23.jdbcbean2306;
 
 public class MemberBean {
 	
-	private String id = "";
-	private String pwd = "";
-	private String name = "";
-	private String num1 = "";
-	private String num2 = "";
-	private String email = "";
-	private String phone = "";
-	private String zipcode = "";
-	private String address = "";
-	private String jobs = "";
+	private String id;
+	private String pwd;
+	private String name;
+	private String num1;
+	private String num2;
+	private String email;
+	private String phone;
+	private String zipcode;
+	private String address;
+	private String jobs;
 	
 	public String getId() {
 		return id;

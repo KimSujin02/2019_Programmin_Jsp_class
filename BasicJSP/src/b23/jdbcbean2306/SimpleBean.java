@@ -1,4 +1,4 @@
-package jdbcbean;
+package b23.jdbcbean2306;
 
 public class SimpleBean {
 	private String message = "";
