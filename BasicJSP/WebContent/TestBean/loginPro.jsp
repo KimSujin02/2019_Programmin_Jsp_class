@@ -8,12 +8,12 @@
 </head>
 <body bgcolor="#FFFFCC">
 <% request.setCharacterEncoding("utf-8"); %>
-<jsp:useBean id="regBean" class="b23.jdbcbean2306.MemberBean"/>
+<jsp:useBean id="regBean" class="b23.jdbcbean2306.Member"/>
 <jsp:setProperty name = "regBean" property="id"/>	
 <%	String id = request.getParameter("id");	
 	String pwd = request.getParameter("pwd"); %>
 <jsp:setProperty name = "regBean" property="id"/>
-<jsp:useBean id="regDbBean" class="b23.jdbcbean2306.MemberDbBean"/>
+<jsp:useBean id="regDbBean" class="b23.jdbcbean2306.MemberDb"/>
 <% int result = regDbBean.selectId(id, pwd);
 	if(result == 1){ 	
 	session.setAttribute("id", id);	
@@ -28,12 +28,6 @@
 		<tr valign="top">
 			<td height=50>
 				<input type=submit value="회원정보조회"></td></form>
-			<td><input type=button value="회원정보수정" onClick="javascript:location.href='update.jsp'"></td>
-			<td>
-				<form method=post action="delete.jsp">
-					<input type=submit value="회 원 탈 회">
-				</form>
-			</td>
 		</tr>
 	</table>
 	<input type=hidden name=id value="<jsp:getProperty name="regBean" property="id"/>">

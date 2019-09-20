@@ -39,7 +39,7 @@
 			</tr>
 			<tr>
 				<td>주민등록번호</td>
-				<td><jsp:getProperty name="redDbBean" property="num1"/>-<jsp:getProperty name="mb" property="num2"/></td>
+				<td><jsp:getProperty name="redDbBean" property="num1"/>-<jsp:getProperty name="redDbBean" property="num2"/></td>
 			</tr>
 			<tr>
 				<td>이메일</td>
