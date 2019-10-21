@@ -1,31 +1,44 @@
 package b23.jdbcbean2306;
 import java.sql.*;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
 public class MemberDbBean {
 	
-		final String JDBC_DRIVER = "org.gjt.mm.mysql.Driver";
-		final String JDBC_URL = "jdbc:mysql://localhost:3307/mydb";
-		final String USER = "root";
-		final String PASS = "1234";
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		String sql = null;
-		ResultSet rs = null;
+		DataSource ds;
 	
 	public MemberDbBean() {	
 		try {
-			Class.forName(JDBC_DRIVER); //드라이브 올리는 거임.
-			conn = DriverManager.getConnection(JDBC_URL, USER, PASS);
+			Context initCtx = new InitialContext();
+			Context envCtx = (Context)initCtx.lookup("java:comp/env");
+			ds = (DataSource)envCtx.lookup("jdbc/mydb");
 		} catch(Exception e){
 			e.printStackTrace();
 			System.out.println("드라이버 로딩 및 connection 오류");
 		}
 	}
 	
+	public static MemberDbBean memberdb = new MemberDbBean();
+	
+	public static MemberDbBean getInstance() {
+		if(memberdb == null) {
+			memberdb = new MemberDbBean();
+		}
+		return memberdb;
+	}
+	
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	String sql = null;
+	
 	public void insertMember(MemberBean member) { 
-		sql = "insert into tblRegister(id, pwd, name, num1, num2, email, phone, zipcode, address, jobs)"
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		sql = "INSERT INTO tblRegister(id, pwd, name, num1, num2, email, phone, zipcode, address, jobs)"
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
+			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getId()); 
 			pstmt.setString(2, member.getPwd());
@@ -41,7 +54,15 @@ public class MemberDbBean {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("데이터베이스 입력 오류");
-		}
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+				if(rs != null) rs.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}	
 		
 	} 
 	
@@ -51,6 +72,7 @@ public class MemberDbBean {
 		sql = "select * from tblregister where id=?";
 		
 		try {
+			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
@@ -71,12 +93,21 @@ public class MemberDbBean {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("데이터 불러오기 오류");
-		}
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+				if(rs != null) rs.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}	
 		return member;
 	}
 	
 	public void updateMember(MemberBean member) {
 		try {
+			conn = ds.getConnection();
 			sql="update tblregister set email = ?, phone = ?, zipcode = ?, address = ?, jobs = ?"
 				+ "where id = ?";
 			pstmt = conn.prepareStatement(sql);
@@ -89,7 +120,15 @@ public class MemberDbBean {
 			pstmt.executeUpdate();
 		}catch (Exception e) {
 			e.printStackTrace();
-		}
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+				if(rs != null) rs.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}	
 	}
 	
 	public int selectId(String inId, String inPwd) {
@@ -97,6 +136,7 @@ public class MemberDbBean {
 		String id = "";
 		String pwd = "";
 		try {
+			conn = ds.getConnection();
 			sql = "select id, pwd from tblregister where id=?"; //SQL문
 			pstmt = conn.prepareStatement(sql); //쿼리문 실행 준비 (insert문 실행), executeQuery문은 select문 실행
 			
@@ -114,7 +154,15 @@ public class MemberDbBean {
 			
 	     }catch(Exception e){
 	     	e.printStackTrace();
-	    }
+	    } finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+				if(rs != null) rs.close();
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}	
 		return result;
 	}
 	
@@ -122,6 +170,7 @@ public class MemberDbBean {
 		String str = "";
 		sql = "select id, pwd from tblregister where id=?"; //SQL문
 		try {
+			conn = ds.getConnection();
 			pstmt = conn.prepareStatement(sql); //쿼리문 실행 준비 (insert문 실행), executeQuery문은 select문 실행
 			
 			pstmt.setString(1, id);
@@ -142,25 +191,33 @@ public class MemberDbBean {
 		        	str = "회원 탈퇴 실패";
 	        }catch(Exception e){
 	        	e.printStackTrace();
-	        }
+	        } finally {
+				try {
+					if(conn != null) conn.close();
+					if(pstmt != null) pstmt.close();
+					if(rs != null) rs.close();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}	
 		return str;
 	}
 	
-	public void freeConn() {
-		if(pstmt != null) {
-			try {
-				pstmt.close();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if(conn != null) {
-			try {
-				conn.close();
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	public void freeConn() {
+//		if(pstmt != null) {
+//			try {
+//				pstmt.close();
+//			}catch(Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		if(conn != null) {
+//			try {
+//				conn.close();
+//			}catch(Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
 }
