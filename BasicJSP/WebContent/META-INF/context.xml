@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-<Resource name="jdbc/mydb" auth="container" 
+<Resource
+name="jdbc/mydb" auth="container" 
 type="javax.sql.DataSource" driverClassName="org.gjt.mm.mysql.Driver"
 url="jdbc:mysql://localhost:3306/mydb"
 username="root" password="mirim2"

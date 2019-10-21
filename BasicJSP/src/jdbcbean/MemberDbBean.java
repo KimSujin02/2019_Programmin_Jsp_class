@@ -4,9 +4,9 @@ import java.sql.*;
 public class MemberDbBean {
 	
 		final String JDBC_DRIVER = "org.gjt.mm.mysql.Driver";
-		final String JDBC_URL = "jdbc:mysql://localhost:3307/mydb";
+		final String JDBC_URL = "jdbc:mysql://localhost:3306/mydb";
 		final String USER = "root";
-		final String PASS = "1234";
+		final String PASS = "mirim2";
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String sql = null;
@@ -23,20 +23,14 @@ public class MemberDbBean {
 	}
 	
 	public void insertMember(MemberBean member) { 
-		sql = "insert into tblRegister(id, pwd, name, num1, num2, email, phone, zipcode, address, jobs)"
-				+ "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		sql = "insert into member(id, pwd, email, phone)"
+				+ "values (?, ?, ?, ?)";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getId()); 
 			pstmt.setString(2, member.getPwd());
-			pstmt.setString(3, member.getName());
-			pstmt.setString(4, member.getNum1());
-			pstmt.setString(5, member.getNum2());
 			pstmt.setString(6, member.getEmail()); 
 			pstmt.setString(7, member.getPhone());
-			pstmt.setString(8, member.getZipcode());
-			pstmt.setString(9, member.getAddress());
-			pstmt.setString(10, member.getJobs());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -47,8 +41,8 @@ public class MemberDbBean {
 	
 	public MemberBean selectMember(String id) {
 		System.out.println(id);
-		MemberBean member = new MemberBean();
-		sql = "select * from tblregister where id=?";
+		MemberBean regBean = new MemberBean();
+		sql = "select * from member where id=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -56,35 +50,26 @@ public class MemberDbBean {
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				member.setId(rs.getString("id"));
-				member.setPwd(rs.getString("pwd"));
-				member.setName(rs.getString("name"));
-				member.setNum1(rs.getString("num1"));
-				member.setNum2(rs.getString("num2"));
-				member.setEmail(rs.getString("email"));
-				member.setPhone(rs.getString("phone"));
-				member.setZipcode(rs.getString("zipcode"));
-				member.setAddress(rs.getString("address"));
-				member.setJobs(rs.getString("jobs"));
+				regBean.setId(rs.getString("id"));
+				regBean.setPwd(rs.getString("pwd"));
+				regBean.setEmail(rs.getString("email"));
+				regBean.setPhone(rs.getString("phone"));
 			}
 	
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("데이터 불러오기 오류");
 		}
-		return member;
+		return regBean;
 	}
 	
 	public void updateMember(MemberBean member) {
 		try {
-			sql="update tblregister set email = ?, phone = ?, zipcode = ?, address = ?, jobs = ?"
+			sql="update member set email = ?, phone = ?"
 				+ "where id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getEmail());
 			pstmt.setString(2, member.getPhone());
-			pstmt.setString(3, member.getZipcode());
-			pstmt.setString(4, member.getAddress());
-			pstmt.setString(5, member.getJobs());
 			pstmt.setString(6, member.getId());
 			pstmt.executeUpdate();
 		}catch (Exception e) {
@@ -97,7 +82,7 @@ public class MemberDbBean {
 		String id = "";
 		String pwd = "";
 		try {
-			sql = "select id, pwd from tblregister where id=?"; //SQL문
+			sql = "select id, pwd from member where id=?"; //SQL문
 			pstmt = conn.prepareStatement(sql); //쿼리문 실행 준비 (insert문 실행), executeQuery문은 select문 실행
 			
 			pstmt.setString(1, inId);
@@ -120,7 +105,7 @@ public class MemberDbBean {
 	
 	public String deleteMember(String id, String pwd) {
 		String str = "";
-		sql = "select id, pwd from tblregister where id=?"; //SQL문
+		sql = "select id, pwd from member where id=?"; //SQL문
 		try {
 			pstmt = conn.prepareStatement(sql); //쿼리문 실행 준비 (insert문 실행), executeQuery문은 select문 실행
 			
@@ -130,7 +115,7 @@ public class MemberDbBean {
 			if(rs.next()){
 				String rPwd = rs.getString("pwd");
 				if(rPwd.equals(pwd)){
-					sql = "delete from tblregister where id = ? and pwd=?";
+					sql = "delete from member where id = ? and pwd=?";
 		    		   pstmt = conn.prepareStatement(sql);
 		    		   pstmt.setString(1, id);
 		    		   pstmt.setString(2, pwd);
