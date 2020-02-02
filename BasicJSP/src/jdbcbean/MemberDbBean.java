@@ -1,25 +1,32 @@
 package jdbcbean;
 import java.sql.*;
 
+import javax.sql.DataSource;
+
 public class MemberDbBean {
 	
-		final String JDBC_DRIVER = "org.gjt.mm.mysql.Driver";
-		final String JDBC_URL = "jdbc:mysql://localhost:3306/mydb";
-		final String USER = "root";
-		final String PASS = "mirim2";
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		String sql = null;
-		ResultSet rs = null;
+DataSource ds;
+Connection conn = null;
+PreparedStatement pstmt = null;
+ResultSet rs = null;
+String sql = null;
 	
 	public MemberDbBean() {	
 		try {
-			Class.forName(JDBC_DRIVER); //드라이브 올리는 거임.
-			conn = DriverManager.getConnection(JDBC_URL, USER, PASS);
+			conn = DBConnection.getConnection();
 		} catch(Exception e){
 			e.printStackTrace();
 			System.out.println("드라이버 로딩 및 connection 오류");
 		}
+	}
+	
+	public static MemberDbBean memberdb = new MemberDbBean();
+	
+	public static MemberDbBean getInstance() {
+		if(memberdb == null) {
+			memberdb = new MemberDbBean();
+		}
+		return memberdb;
 	}
 	
 	public void insertMember(MemberBean member) { 
